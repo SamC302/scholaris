@@ -30,3 +30,15 @@ class Gradebook:
             self.courses.append(curr_course)
             self.grades[curr_course.title] = round(curr_course.total_grade,4) if curr_course.total_grade is not None else curr_course.total_grade
 
+    def get_course(self,name):
+        for c in self.courses:
+            if c.title == name:
+                return c
+        return None
+
+    def update(self):
+        for curr_course in self.courses:
+            self.grades[curr_course.title] = round(curr_course.total_grade,
+                                                   4) if curr_course.total_grade is not None else curr_course.total_grade
+
+

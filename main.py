@@ -1,4 +1,5 @@
 import json
+import pathlib
 
 from rich.columns import Columns
 from rich.panel import Panel
@@ -17,8 +18,9 @@ from rich.table import Table
 from rich.traceback import install
 
 install(show_locals=True)
+HERE  = pathlib.Path(__file__).parent
 
-
+# TODO: Add grade_calculate command to find the minimum grade you need on an assignment to get a certain grade
 def getStudentVueData():
     username = IntPrompt.ask('Enter your user id')
     pwd = Prompt.ask('Enter your password')
@@ -59,10 +61,11 @@ def print_grade_table(gradebook):
 
     )
 
-def course_commands(course):
+def course_commands(course): # TODO: Add prompt headers to indicate context
     command = Prompt.ask(f"[blue bold]({course.title}) Enter a command")
     while True:
         if command == 'exit':
+            console.clear()
             return
         elif command == 'modify':
             grid = Table()
@@ -95,6 +98,24 @@ def course_commands(course):
             console.clear()
             course.calculate_grade()
             course.print_grade_table()
+        elif command == 'add':
+            name = Prompt.ask("What should the name of the Assignment be?")
+            new_points = IntPrompt.ask("What should the new amount of points be?")
+            new_t_points = IntPrompt.ask("What should the new amount of total points be?")
+            grid = Table()
+            grid.add_column('ID')
+            grid.add_column('Category')
+            count = 1
+            for category in course.categories:
+                grid.add_row(str(count), category)
+                count += 1
+            console.print(grid)
+            category_id = IntPrompt.ask("What should the new category be?")
+            a = Assignment(f'{new_points} / {new_t_points}',course.categories[category_id - 1],name,False)
+            course.add_assignment(a)
+            console.clear()
+            course.calculate_grade()
+            course.print_grade_table()
         elif command == 'reset':
             grid = Table()
             grid.add_column('ID')
@@ -109,13 +130,15 @@ def course_commands(course):
             if assignment_id == 0:
                 for assignment in course.assignments:
                     assignment.reset()
+                    if assignment.real is False:
+                        course.assignments.remove(assignment)
             else:
                 course.assignments[assignment_id - 1].reset()
             console.clear()
             course.calculate_grade()
             course.print_grade_table()
         else:
-            print("[blue bold]({course.title}) [red]Invalid command!")
+            print(f"[blue bold]({course.title}) [red]Invalid command!")
         command = Prompt.ask(f"[blue bold]({course.title}) Enter a command")
         console.clear()
 
@@ -140,15 +163,20 @@ def start_commands(gradebook):
             console.clear()
             gradebook.courses[course_id-1].print_grade_table()
             course_commands(gradebook.courses[course_id-1])
+            console.clear()
+            print_grade_table(gradebook)
+            command = Prompt.ask("Enter a command")
         else:
+            console.clear()
+            print_grade_table(gradebook)
             print("[red]Invalid command!")
-        command = Prompt.ask("Enter a command")
-        console.clear()
+            command = Prompt.ask("Enter a command")
+
 
 
 
 def main():
-    with open('file.json', 'r') as file:
+    with open(str(HERE)+'\\file.json', 'r') as file:
         data = json.loads(file.read())
 
     refresh = False
@@ -156,16 +184,13 @@ def main():
     if (arrow.get(data['Last Time'], 'YYYY-MM-DD').date() < arrow.now('America/New_York').date()) or refresh:
         data = getStudentVueData()
         data['Last Time'] = arrow.utcnow().to('America/New_York').format('YYYY-MM-DD')
-        with open('file.json', 'w') as outfile:
+        with open(str(HERE)+'\\file.json', 'w') as outfile:
             json.dump(data, outfile, indent=4)
 
     gradebook = Gradebook(data)
     print_grade_table(gradebook)
 
     start_commands(gradebook)
-
-    for course in gradebook.courses:
-        course.print_grade_table()
 
 
 main()

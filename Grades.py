@@ -7,32 +7,33 @@ class Grade(enum.Enum):
     C = .695
     D = .595
     E = 0
+    NOGRADE = 'No Grade'
 
     def __gt__(self, other):
         if self.__class__ is other.__class__:
             return self.value > other.value
-        elif other.__class__ is int:
+        elif other.__class__ is float:
             return self.value > other
         return NotImplemented
 
     def __ge__(self, other):
         if self.__class__ is other.__class__:
             return self.value >= other.value
-        elif other.__class__ is int:
+        elif other.__class__ is float:
             return self.value >= other
         return NotImplemented
 
     def __lt__(self, other):
         if self.__class__ is other.__class__:
             return self.value < other.value
-        elif other.__class__ is int:
+        elif other.__class__ is float:
             return self.value < other
         return NotImplemented
 
     def __le__(self, other):
         if self.__class__ is other.__class__:
             return self.value <= other.value
-        elif other.__class__ is int:
+        elif other.__class__ is float:
             return self.value <= other
         return NotImplemented
 

@@ -51,7 +51,10 @@ class Assignment:
             return None
 
     def get_points_string(self):
-        return f'{self.points} / {self.total_points}'
+        if self.graded:
+            return f'{self.points} / {self.total_points}'
+        else:
+            return f'{self.total_points} points possible'
 
     def __str__(self):
         if self.graded:

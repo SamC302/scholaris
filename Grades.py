@@ -35,3 +35,6 @@ class Grade(enum.Enum):
         elif other.__class__ is int:
             return self.value <= other
         return NotImplemented
+
+    def __str__(self):
+        return self.name

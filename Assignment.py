@@ -5,15 +5,19 @@ class Assignment:
     def __init__(self, points_string, category, name, real=True):
         if '/' in points_string:
             points, t_points = points_string.strip().split(' / ')
+            graded = True
         else:
             points = 0
             t_points = points_string.split(' ')[0]
+            graded = False
+
         self.points = float(points)
         self.total_points = float(t_points)
         self.category = category
         self.name = name
         self.real = real
         self.modified = False
+        self.graded = graded
 
     def set_total_points(self, val):
         self.modified = True
@@ -21,6 +25,7 @@ class Assignment:
 
     def set_points(self, val):
         self.modified = True
+        self.graded = True
         self.points = val
 
     def set_category(self, val):
@@ -44,4 +49,12 @@ class Assignment:
             return Grade.E
         else:
             return None
+
+    def get_points_string(self):
+        return f'{self.points} / {self.total_points}'
+
+    def __str__(self):
+        if self.graded:
+            return f'On {self.name} (in {self.category}), you received a {self.points} out of {self.total_points} which is an {self.get_grade()} '
+
 

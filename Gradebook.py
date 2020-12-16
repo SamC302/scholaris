@@ -35,6 +35,7 @@ class Gradebook:
                                                        4) if curr_course.total_grade is not None else curr_course.total_grade
                 self.letter_grades[curr_course.title] = curr_course.total_grade_letter
                 console.log(f"Course {title} complete")
+        console.clear()
 
     def get_course(self, name):
         for c in self.courses:

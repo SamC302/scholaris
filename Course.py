@@ -121,11 +121,12 @@ class Course:
         table.add_column('Letter')
 
         for assignment in self.assignments:
-            grade_display = f'[{grade_associate[assignment.get_grade()]}]{assignment.get_percentage() * 100}%' if \
+            grade_display = f'[{grade_associate[assignment.get_grade()]}]{round(assignment.get_percentage(),4) * 100}%' if \
                 assignment.graded else f'No Grade'
             letter_display = f'[{grade_associate[assignment.get_grade()]}]{assignment.get_grade()}' if assignment.graded else f'No Grade'
             points_display = f'[{grade_associate[assignment.get_grade()]}]{assignment.get_points_string()}' if assignment.graded else f'{assignment.get_points_string()}'
-            table.add_row(assignment.name, assignment.category, points_display, grade_display, letter_display)
+            assignment_display = f'[bold magenta]{assignment.name}' if assignment.modified else f'{assignment.name}'
+            table.add_row(assignment_display, assignment.category, points_display, grade_display, letter_display)
         return table
 
     def print_grade_table(self):
@@ -145,7 +146,7 @@ class Course:
                         expand=True,
                     )
                 ),
-                title=f"[white bold]{self.title}"
+                title=f"[white bold]{self.title}",
 
             )
         )

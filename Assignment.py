@@ -12,25 +12,46 @@ class Assignment:
             graded = False
 
         self.points = float(points)
+        self.orig_points = self.points
         self.total_points = float(t_points)
+        self.orig_total_points = self.total_points
         self.category = category
+        self.orig_category = category
         self.name = name
         self.real = real
         self.modified = False
         self.graded = graded
+        self.orig_graded = self.graded
 
     def set_total_points(self, val):
-        self.modified = True
+        if self.orig_total_points != val:
+            self.modified = True
+        else:
+            self.modified = False
         self.total_points = val
 
     def set_points(self, val):
-        self.modified = True
-        self.graded = True
+        if self.orig_total_points != val:
+            self.modified = True
+            self.graded = True
+        else:
+            self.modified = False
+            self.graded = self.orig_graded
         self.points = val
 
     def set_category(self, val):
-        self.modified = True
+        if self.orig_total_points != val:
+            self.modified = True
+        else:
+            self.modified = False
         self.category = val
+
+    def reset(self):
+        self.modified = False
+        self.points = self.orig_points
+        self.total_points = self.orig_total_points
+        self.category = self.orig_category
+        self.graded = self.orig_graded
 
     def get_percentage(self):
         return round(self.points / self.total_points, 2)

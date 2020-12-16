@@ -2,11 +2,11 @@ import enum
 
 
 class Grade(enum.Enum):
-    A = 5
-    B = 4
-    C = 3
-    D = 2
-    F = 1
+    A = .895
+    B = .795
+    C = .695
+    D = .595
+    E = 0
 
     def __gt__(self, other):
         if self.__class__ is other.__class__:

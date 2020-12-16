@@ -1,7 +1,7 @@
 from rich.console import RenderGroup
 from rich.panel import Panel
 
-from terminal import console
+from terminal import console, grade_associate
 from rich.columns import Columns
 from rich.table import Table
 
@@ -82,16 +82,7 @@ class Course:
         else:
             return None
 
-    def print_grade_table(self):
-        grade_associate = {
-            Grade.A: 'bold green',
-            Grade.B: 'bold yellow',
-            Grade.C: 'bold blue',
-            Grade.D: 'bold red',
-            Grade.E: 'bold white',
-            Grade.NOGRADE: ''
-        }
-
+    def generate_overall_grade_table(self):
         p_table = Table(title=f"Overall Grade", show_footer=True)
         p_table.add_column("Category", footer="Total")
         p_table.add_column("Weight", footer="100%")
@@ -118,7 +109,9 @@ class Course:
                 letter_display = f'No Grade'
             p_table.add_row(category, f'{round(self.category_weights[category], 4) * 100}%', grade_display,
                             letter_display)
+        return p_table
 
+    def generate_assignment_table(self):
         table = Table(title=f"Assignments")
 
         table.add_column("Assignment", justify="left")
@@ -133,7 +126,11 @@ class Course:
             letter_display = f'[{grade_associate[assignment.get_grade()]}]{assignment.get_grade()}' if assignment.graded else f'No Grade'
             points_display = f'[{grade_associate[assignment.get_grade()]}]{assignment.get_points_string()}' if assignment.graded else f'{assignment.get_points_string()}'
             table.add_row(assignment.name, assignment.category, points_display, grade_display, letter_display)
+        return table
 
+    def print_grade_table(self):
+        table = self.generate_assignment_table()
+        p_table = self.generate_overall_grade_table()
         console.print(
             Panel(
                 Columns(

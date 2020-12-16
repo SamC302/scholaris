@@ -11,7 +11,7 @@ import arrow
 from rich.text import Text
 
 from Grades import Grade
-from terminal import console
+from terminal import console, grade_associate
 from rich.table import Table
 from rich.traceback import install
 install(show_locals=True)
@@ -39,14 +39,6 @@ def print_grade_table(gradebook):
     table.add_column("Course", justify="left")
     table.add_column('Percent')
     table.add_column('Letter')
-
-    grade_associate = {
-        Grade.A: 'bold green',
-        Grade.B: 'bold yellow',
-        Grade.C: 'bold blue',
-        Grade.D: 'bold red',
-        Grade.E: 'bold magenta'
-    }
 
     for course in gradebook.courses:
         grade_display = f'[{grade_associate[course.total_grade_letter]}]{gradebook.grades[course.title] * 100}%' if \

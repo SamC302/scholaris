@@ -133,9 +133,19 @@ class Course:
         p_table = self.generate_overall_grade_table()
         console.print(
             Panel(
-                Columns(
-                    (table, p_table),
-                    align="center",
-                    expand=True,
-                    title=f"[white bold]{self.title}"))
+                RenderGroup(
+                    Columns(
+                        (table,),
+                        align="center",
+                        expand=True,
+                    ),
+                    Columns(
+                        (p_table,),
+                        align="center",
+                        expand=True,
+                    )
+                ),
+                title=f"[white bold]{self.title}"
+
+            )
         )

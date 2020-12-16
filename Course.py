@@ -1,16 +1,19 @@
 from Assignment import Assignment
 
 
-class Courses:
-    def __init__(self, categories, weights, assignments=None):
-        if assignments is None:
-            assignments = []
-        self.assignments = assignments
+class Course:
+    def __init__(self, title, categories, weights, assignments=None):
         self.categories = categories
         self.category_weights = {c: w for c, w in zip(categories, weights)}
         self.category_grades = {}
         self.total_grade = None
         self.total_grade_letter = None
+        self.title = title
+        if assignments is None:
+            self.assignments = []
+        else:
+            self.assignments = assignments
+            self.calculate_grade()
 
     def add_assignment(self,assignment):
         self.assignments.append(assignment)

@@ -1,1 +1,1 @@
-# secta
+# Scholaris

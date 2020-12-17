@@ -76,13 +76,13 @@ def course_commands(course): # TODO: Add prompt headers to indicate context
                 grid.add_row(str(count), assignment.name)
                 count += 1
             console.print(grid)
-            assignment_id = IntPrompt.ask("Enter the ID of the assignment you want to modify")
-            property = Prompt.ask("What do you want to modify?",choices=["Points","Total Points","Category"])
+            assignment_id = IntPrompt.ask(f"[blue bold]({course.title}) Enter the ID of the assignment you want to modify")
+            property = Prompt.ask(f"[blue bold]({course.title}) What do you want to modify?",choices=["Points","Total Points","Category"])
             if property == 'Points':
-                new_points = IntPrompt.ask("What should the new amount of points be?")
+                new_points = IntPrompt.ask(f"[blue bold]({course.title}) What should the new amount of points be?")
                 course.assignments[assignment_id - 1].set_points(new_points)
             elif property == 'Total Points':
-                new_points = IntPrompt.ask("What should the new amount of total points be?")
+                new_points = IntPrompt.ask(f"[blue bold]({course.title}) What should the new amount of total points be?")
                 course.assignments[assignment_id - 1].set_total_points(new_points)
             elif property == 'Category':
                 grid = Table()
@@ -93,15 +93,15 @@ def course_commands(course): # TODO: Add prompt headers to indicate context
                     grid.add_row(str(count), category)
                     count += 1
                 console.print(grid)
-                category_id = IntPrompt.ask("What should the new category be?")
+                category_id = IntPrompt.ask(f"[blue bold]({course.title}) What should the new category be?")
                 course.assignments[assignment_id - 1].set_category(course.categories[category_id - 1])
             console.clear()
             course.calculate_grade()
             course.print_grade_table()
         elif command == 'add':
-            name = Prompt.ask("What should the name of the Assignment be?")
-            new_points = IntPrompt.ask("What should the new amount of points be?")
-            new_t_points = IntPrompt.ask("What should the new amount of total points be?")
+            name = Prompt.ask(f"[blue bold]({course.title}) What should the name of the Assignment be?")
+            new_points = IntPrompt.ask(f"[blue bold]({course.title}) What should the new amount of points be?")
+            new_t_points = IntPrompt.ask(f"[blue bold]({course.title}) What should the new amount of total points be?")
             grid = Table()
             grid.add_column('ID')
             grid.add_column('Category')
@@ -110,7 +110,7 @@ def course_commands(course): # TODO: Add prompt headers to indicate context
                 grid.add_row(str(count), category)
                 count += 1
             console.print(grid)
-            category_id = IntPrompt.ask("What should the new category be?")
+            category_id = IntPrompt.ask(f"[blue bold]({course.title}) What should the new category be?")
             a = Assignment(f'{new_points} / {new_t_points}',course.categories[category_id - 1],name,False)
             course.add_assignment(a)
             console.clear()
@@ -126,7 +126,7 @@ def course_commands(course): # TODO: Add prompt headers to indicate context
                 grid.add_row(str(count), assignment.name)
                 count += 1
             console.print(grid)
-            assignment_id = IntPrompt.ask("Enter the ID of the assignment you want to modify")
+            assignment_id = IntPrompt.ask(f"[blue bold]({course.title}) Enter the ID of the assignment you want to modify")
             if assignment_id == 0:
                 for assignment in course.assignments:
                     assignment.reset()

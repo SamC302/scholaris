@@ -1,12 +1,11 @@
 from rich.console import RenderGroup
 from rich.panel import Panel
 
-from terminal import console, grade_associate
+from scholaris.terminal import console, grade_associate
 from rich.columns import Columns
 from rich.table import Table
 
-from Assignment import Assignment
-from Grades import Grade
+from scholaris.Grades import Grade
 
 
 class Course:

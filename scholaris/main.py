@@ -4,16 +4,15 @@ import pathlib
 from rich.columns import Columns
 from rich.panel import Panel
 
-from Gradebook import Gradebook
+from scholaris.Gradebook import Gradebook
 from rich import print
 from rich.prompt import Prompt, IntPrompt, Confirm
 from studentvue import StudentVue
-from Assignment import Assignment
+from scholaris.Assignment import Assignment
 import arrow
 from rich.text import Text
 
-from Grades import Grade
-from terminal import console, grade_associate
+from scholaris.terminal import console, grade_associate
 from rich.table import Table
 from rich.traceback import install
 
@@ -192,5 +191,3 @@ def main():
 
     start_commands(gradebook)
 
-
-main()

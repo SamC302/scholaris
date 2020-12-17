@@ -1,6 +1,6 @@
 from rich.console import Console
 
-from Grades import Grade
+from scholaris.Grades import Grade
 
 console = Console()
 

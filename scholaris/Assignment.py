@@ -1,4 +1,4 @@
-from Grades import Grade
+from scholaris.Grades import Grade
 
 
 class Assignment:

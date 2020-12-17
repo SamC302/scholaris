@@ -1,6 +1,6 @@
-from Course import Course
-from Assignment import Assignment
-from terminal import console
+from scholaris.Course import Course
+from scholaris.Assignment import Assignment
+from scholaris.terminal import console
 
 
 class Gradebook:

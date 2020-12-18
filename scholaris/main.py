@@ -17,7 +17,8 @@ from rich.table import Table
 from rich.traceback import install
 
 install(show_locals=True)
-HERE  = pathlib.Path(__file__).parent
+HERE = pathlib.Path(__file__).parent
+
 
 # TODO: Add grade_calculate command to find the minimum grade you need on an assignment to get a certain grade
 def getStudentVueData():
@@ -60,8 +61,9 @@ def print_grade_table(gradebook):
 
     )
 
-def course_commands(course): # TODO: Add prompt headers to indicate context
-    command = Prompt.ask(f"[blue bold]({course.title}) Enter a command")
+
+def course_commands(course):
+    command = Prompt.ask(f"[green bold]({course.title}) Enter a command")
     while True:
         if command == 'exit':
             console.clear()
@@ -74,14 +76,17 @@ def course_commands(course): # TODO: Add prompt headers to indicate context
             for assignment in course.assignments:
                 grid.add_row(str(count), assignment.name)
                 count += 1
-            console.print(grid)
-            assignment_id = IntPrompt.ask(f"[blue bold]({course.title}) Enter the ID of the assignment you want to modify")
-            property = Prompt.ask(f"[blue bold]({course.title}) What do you want to modify?",choices=["Points","Total Points","Category"])
+            console.print(Columns((grid,),align="center",expand=True,),)
+            assignment_id = IntPrompt.ask(
+                f"[green bold]({course.title}) Enter the ID of the assignment you want to modify")
+            property = Prompt.ask(f"[green bold]({course.title}) What do you want to modify?",
+                                  choices=["Points", "Total Points", "Category"])
             if property == 'Points':
-                new_points = IntPrompt.ask(f"[blue bold]({course.title}) What should the new amount of points be?")
+                new_points = IntPrompt.ask(f"[green bold]({course.title}) What should the new amount of points be? It can have {course.assignments[assignment_id - 1].total_points} total")
                 course.assignments[assignment_id - 1].set_points(new_points)
             elif property == 'Total Points':
-                new_points = IntPrompt.ask(f"[blue bold]({course.title}) What should the new amount of total points be?")
+                new_points = IntPrompt.ask(
+                    f"[green bold]({course.title}) What should the new amount of total points be?")
                 course.assignments[assignment_id - 1].set_total_points(new_points)
             elif property == 'Category':
                 grid = Table()
@@ -91,16 +96,16 @@ def course_commands(course): # TODO: Add prompt headers to indicate context
                 for category in course.categories:
                     grid.add_row(str(count), category)
                     count += 1
-                console.print(grid)
-                category_id = IntPrompt.ask(f"[blue bold]({course.title}) What should the new category be?")
+                console.print(Columns((grid,), align="center", expand=True, ), )
+                category_id = IntPrompt.ask(f"[green bold]({course.title}) What should the new category be?")
                 course.assignments[assignment_id - 1].set_category(course.categories[category_id - 1])
             console.clear()
             course.calculate_grade()
             course.print_grade_table()
         elif command == 'add':
-            name = Prompt.ask(f"[blue bold]({course.title}) What should the name of the Assignment be?")
-            new_points = IntPrompt.ask(f"[blue bold]({course.title}) What should the new amount of points be?")
-            new_t_points = IntPrompt.ask(f"[blue bold]({course.title}) What should the new amount of total points be?")
+            name = Prompt.ask(f"[green bold]({course.title}) What should the name of the Assignment be?")
+            new_points = IntPrompt.ask(f"[green bold]({course.title}) What should the new amount of points be?")
+            new_t_points = IntPrompt.ask(f"[green bold]({course.title}) What should the new amount of total points be?")
             grid = Table()
             grid.add_column('ID')
             grid.add_column('Category')
@@ -108,9 +113,9 @@ def course_commands(course): # TODO: Add prompt headers to indicate context
             for category in course.categories:
                 grid.add_row(str(count), category)
                 count += 1
-            console.print(grid)
-            category_id = IntPrompt.ask(f"[blue bold]({course.title}) What should the new category be?")
-            a = Assignment(f'{new_points} / {new_t_points}',course.categories[category_id - 1],name,False)
+            console.print(Columns((grid,),align="center",expand=True,),)
+            category_id = IntPrompt.ask(f"[green bold]({course.title}) What should the new category be?")
+            a = Assignment(f'{new_points} / {new_t_points}', course.categories[category_id - 1], name, False)
             course.add_assignment(a)
             console.clear()
             course.calculate_grade()
@@ -124,23 +129,27 @@ def course_commands(course): # TODO: Add prompt headers to indicate context
             for assignment in course.assignments:
                 grid.add_row(str(count), assignment.name)
                 count += 1
-            console.print(grid)
-            assignment_id = IntPrompt.ask(f"[blue bold]({course.title}) Enter the ID of the assignment you want to modify")
+            console.print(Columns((grid,),align="center",expand=True,),)
+            assignment_id = IntPrompt.ask(
+                f"[green bold]({course.title}) Enter the ID of the assignment you want to modify")
             if assignment_id == 0:
                 for assignment in course.assignments:
                     assignment.reset()
-                    if assignment.real is False:
-                        course.assignments.remove(assignment)
+                course.assignments = [a for a in course.assignments if a.real]
             else:
                 course.assignments[assignment_id - 1].reset()
             console.clear()
             course.calculate_grade()
             course.print_grade_table()
+        elif command == 'help':
+            print(f"[blue bold] modify: Change an aspect of an assignment")
+            print(f"[yellow bold] add: Add a custom assignment")
+            print(f"[purple bold] reset: Undo your changes for a specific assignment or the entire course")
+            print(f"[red bold] exit: Leave the course dialog")
         else:
-            print(f"[blue bold]({course.title}) [red]Invalid command!")
-        command = Prompt.ask(f"[blue bold]({course.title}) Enter a command")
+            print(f"[green bold]({course.title}) [red]Invalid command! Enter 'help' to see possible commands.")
+        command = Prompt.ask(f"[green bold]({course.title}) Enter a command")
         console.clear()
-
 
 
 def start_commands(gradebook):
@@ -155,27 +164,27 @@ def start_commands(gradebook):
             grid.add_column('Course')
             count = 1
             for course in gradebook.courses:
-                grid.add_row(str(count),course.title)
-                count +=1
-            console.print(grid)
+                grid.add_row(str(count), course.title)
+                count += 1
+            console.print(Columns((grid,),align="center",expand=True,),)
             course_id = IntPrompt.ask("Enter the ID of the course you want to view")
             console.clear()
-            gradebook.courses[course_id-1].print_grade_table()
-            course_commands(gradebook.courses[course_id-1])
+            gradebook.courses[course_id - 1].print_grade_table()
+            course_commands(gradebook.courses[course_id - 1])
             console.clear()
             print_grade_table(gradebook)
-            command = Prompt.ask("Enter a command")
+        elif command == 'help':
+            print('[green bold] course: Pick a course to view')
+            print('[red bold] end: Exit Scholaris')
         else:
             console.clear()
             print_grade_table(gradebook)
-            print("[red]Invalid command!")
-            command = Prompt.ask("Enter a command")
-
-
+            print("[red]Invalid command! Enter 'help' to see possible commands")
+        command = Prompt.ask("Enter a command")
 
 
 def main():
-    with open(str(HERE)+'\\file.json', 'r') as file:
+    with open(str(HERE) + '\\file.json', 'r') as file:
         data = json.loads(file.read())
 
     refresh = False
@@ -183,11 +192,10 @@ def main():
     if (arrow.get(data['Last Time'], 'YYYY-MM-DD').date() < arrow.now('America/New_York').date()) or refresh:
         data = getStudentVueData()
         data['Last Time'] = arrow.utcnow().to('America/New_York').format('YYYY-MM-DD')
-        with open(str(HERE)+'\\file.json', 'w') as outfile:
+        with open(str(HERE) + '\\file.json', 'w') as outfile:
             json.dump(data, outfile, indent=4)
 
     gradebook = Gradebook(data)
     print_grade_table(gradebook)
 
     start_commands(gradebook)
-
